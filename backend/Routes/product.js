@@ -66,6 +66,19 @@ router.post("/updateProductOrders/", async (req, res) => {
   }
 });
 
+/// decreasing the toal number of orders on cancellation
+router.post("/reduceProductOrder",async(req,res)=>{
+  try {
+    
+    const old = await Product.findById(req.body.id);
+    const res = await Product.findByIdAndUpdate( req.body.id,{$set : { Orders : old.Orders - 1} });
+
+    res.status(201).json("Product Orders Updated!");
+  } catch (error) {
+    res.status(500).json("Error while updating!");
+  }
+})
+
 router.get("/getAllProducts", productController.getAllProducts);
 router.post("/createProduct", productController.create);
 router.delete("/deleteProduct/:id", productController.deleteProduct);

@@ -29,7 +29,7 @@ const Navbar = () => {
         </div>
 
         <div className="navItem" onClick={()=>navigate("/orders")}>
-          <span>ORDERS</span>
+          <span>MY ORDERS</span>
           <LocalShippingIcon className='icon'/>
         </div>
 

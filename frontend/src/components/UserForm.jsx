@@ -11,13 +11,11 @@ const UserForm = (props) => {
 
     const user = useSelector(state=>state.currentUser);
     const initial = user?.address;
+
     const [formValues,setFormvalues]  = useState(user?.address);
     const [name,setName] = useState(user?.name);
-    const p = user?.password ? user?.password : "";
-    const [password,setPassword] = useState(p);
     const click = props.state?.click;
     const dispatch = useDispatch();
-    const pass = user?.password ? "Change Password!" : "Set Password!" ;
 
       // validation fields
     const [formErrors, setFormErrors] = useState({});
@@ -26,6 +24,7 @@ const UserForm = (props) => {
       // validation
   const validate = (values) => {
     const errors = {};
+    let re=/^-?[0-9]+$/;
     const special = /[!@#$%^&*(),.?":{}|<>]/g
     const lowerCase = /[a-z]/g;
     const upperCase = /[A-Z]/g;
@@ -41,21 +40,6 @@ const UserForm = (props) => {
     }else if(name?.length>25){
         errors.name = "Input Too Long : Invalid Name!";
     }
-    if (!password) {
-      errors.password = "Password required!";
-    }else if(password?.length<6){
-        errors.password = "Password too short!";
-    }else if(password?.length>15){
-        errors.password = "Password too long!";
-    }else if(!password?.match(lowerCase)){
-        errors.password = "Password should contain lowercase letters!";
-      }else if(!password?.match(upperCase)){
-        errors.password = "Password should contain uppercase letters!";
-      }else if(!password?.match(special)){
-        errors.password = "Password should contain a special character!";
-      }else if(!password?.match(numbers)){
-        errors.password = "Password should contain numbers!";
-    }
 
     if (!values?.city) {
       errors.city = "Enter Your City Name!";
@@ -68,9 +52,13 @@ const UserForm = (props) => {
     }else if(values?.state?.length>25){
         errors.state = "State Name Too Long!";
     }
-    if (!values?.pin) {
+    if (!values.pin) {
       errors.pin = "Enter Pin-Code!";
-    }else if(values?.pin?.length!=6){
+    }else if(values.pin<0){
+      errors.pin = "Invalid Pin-Code : Pin-Code cannot be negative!";
+    }else if(!re.test(values.pin)){
+      errors.pin = "Invalid Pin-Code!";
+    }else if(values.pin.length!=6){
         errors.pin = "Enter 6 digit Pin-Code!";
     }
 
@@ -95,7 +83,7 @@ const UserForm = (props) => {
         setFormvalues((prev)=>{
             return {
                 ...prev,
-                [name] : value
+                [name] : value.trim()
             }
         })
     }
@@ -116,7 +104,6 @@ const UserForm = (props) => {
                   email : user.email,
                   address : [formValues],
                   name : name,
-                  password : password
               }
               try {
                   const res = await updateUser(id,add);
@@ -148,13 +135,8 @@ const UserForm = (props) => {
         </div>
         <div className='div'>
         <span>Name</span>
-        <input type="text" name="" id="" value={name} onChange={(e)=>setName(e.target.value)} placeholder='Enter Your Name...'/>
+        <input type="text" name="" id="" value={name} onChange={(e)=>setName(e.target.value.trim())} placeholder='Enter Your Name...'/>
         <p className="error">{formErrors?.name}</p>
-        </div>
-        <div className='div'>
-        <span>{pass}</span>
-        <input type="text" name="" id="" value={password} onChange={(e)=>setPassword(e.target.value)} placeholder='Enter Password...'/>
-        <p className="error">{formErrors?.password}</p>
         </div>
         <div className='div'>
         <span>Address</span>

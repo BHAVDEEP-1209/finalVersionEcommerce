@@ -17,6 +17,7 @@ const Checkout = () => {
   const [cartTotal, setCartTotal] = useState(0);
   const [input, setInput] = useState("");
   const [discount, setDiscount] = useState(0);
+  const [dis,setDis] = useState(false);
 
   const user = useSelector(state => state.currentUser);
   const [cartItems, setCartItems] = useState([]);
@@ -50,16 +51,20 @@ const Checkout = () => {
       setDelivery(0);
       setDiscount(0);
       setCartTotal(total);
+      setDis(false);
 
     } else if (input == "BUMPER") {
 
       if(delivery==0){
         setDelivery(200);
+        
       }
-      const tempCartTotal = total+delivery;
+
+      const tempCartTotal = total+200;
       const d = 0.20 * tempCartTotal;
-      setDiscount(d);
-      setCartTotal(tempCartTotal - d);
+      setDiscount(Math.round(d));
+      setCartTotal(Math.round(tempCartTotal - d));
+      setDis(true);
 
     } else {
       msg = "Invalid Coupon!"
@@ -112,7 +117,7 @@ const Checkout = () => {
     setLoading(true);
     const get = async () => {
       try {
-        const items = await PlaceOrders(user.id);
+        const items = await PlaceOrders(user.id,{isDiscount : dis});
         
         // for  updating no of orders on product
         const temp = await updateProductOrders({items : cartItems});
@@ -151,7 +156,7 @@ const Checkout = () => {
         <CheckoutForm />
           {
             cartItems?.map((ele, ind) => {
-              return <CartItem state={ele} key={ind} />
+              return <CartItem state={ele} key={ind} st={{dis,setDis}}/>
             })
           }
         </div>

@@ -64,7 +64,7 @@ router.delete("/deleteCartItem/:id",async(req,res)=>{
 
 
 ////////////////// Place Orders
-router.get("/PlaceOrders/:id",async(req,res)=>{
+router.post("/PlaceOrders/:id",async(req,res)=>{
     const id = req.params.id;
     try {
         const items = await Cart.find({purchasedAs : "cart" , purchasedBy : id});
@@ -72,9 +72,14 @@ router.get("/PlaceOrders/:id",async(req,res)=>{
         {
             items?.map(async(item)=>{
                 const ord = item.product.Orders;
+                let dis = 0;
+
+                if(req.body.isDiscount){
+                    dis = (item.quantity*item.product.price) - (item.quantity*item.product.price * 0.20)
+                }
                 const result = await Cart.updateOne({id : item.id , purchasedAs : "cart"},
-                // { $set : { "purchasedAs" : "order" ,  "product.Orders": ord+ 1} }
-                { $set : { "purchasedAs" : "order"} }
+                { $set : { "purchasedAs" : "order" ,  "product.Orders": ord+ 1 , "discount" : Math.round(dis) } }
+                // { $set : { "purchasedAs" : "order"} }
 
                 );
 
@@ -154,6 +159,19 @@ router.post("/getAdminOrdersHistory",async(req,res)=>{
         res.status(200).json(items);
     } catch (error) {
         res.status(500).json("Error while getting data!");
+    }
+})
+
+
+router.post("/getProductTotalSales",async(req,res)=>{
+    try {
+        
+        
+        const items = await Cart.find({purchasedAs : "order" , "product.uploadedBy" : req.body.uploadedBy , "product._id" : req.body.id});
+        res.status(200).json(items);
+        
+    } catch (error) {
+        res.status(500).json("Error!");
     }
 })
 

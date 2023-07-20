@@ -41,7 +41,7 @@ export const deleteCartItem = (id) =>(axios.delete(`http://localhost:5000/cart/d
 export const getCartItems = (id) =>(axios.get(`http://localhost:5000/cart/getCartItems/${id}`))
 
 // PlaceOrders
-export const PlaceOrders = (id) =>(axios.get(`http://localhost:5000/cart/PlaceOrders/${id}`))
+export const PlaceOrders = (id,values) =>(axios.post(`http://localhost:5000/cart/PlaceOrders/${id}`,values))
 
 ///getOrders
 export const getOrders = (id) =>(axios.get(`http://localhost:5000/cart/getOrders/${id}`))
@@ -82,3 +82,7 @@ export const getUsers = ()=>(axios.get("http://localhost:5000/chat/getAllUsers")
 
 
 export const updateProductOrders = (values)=>(axios.post(`http://localhost:5000/product/updateProductOrders`,values))
+
+export const getProductTotalSales =(values)=>(axios.post(`http://localhost:5000/cart/getProductTotalSales`,values))
+
+export const reduceProductOrder =(values)=>(axios.post(`http://localhost:5000/product/reduceProductOrder`,values))

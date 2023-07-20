@@ -40,7 +40,7 @@ const AddProduct = () => {
 
   const handleChange = (e)=>{
     const {name,value} = e.target;
-
+   
     setFormErrors(prev=>{
       return {
         ...prev,
@@ -48,32 +48,51 @@ const AddProduct = () => {
       }
     })
 
-    setFormValues((prev)=>{
-      return {
-        ...prev,
-        [name] : value
-      }
-    })
+
+      setFormValues((prev)=>{
+        return {
+          ...prev,
+          [name] : value
+        }
+      })
+    
   }
 
 
    // validation
    const validate = (values) => {
     const errors = {};
+    let re=/^-?[0-9]+$/;
+    const len = values.name.trim().length;
+    const desLength = values.description.trim().length;
 
-    if (!values.name) {
+    if (!values.name.trim()) {
       errors.name = "Product Name required!";
+    }else if(len>15){
+      errors.name = "Product Name Too Long!";
     }
-    if (!values.description) {
+    if (!values.description.trim()) {
       errors.description = "Write Product Description!";
-    }
-    if (!values.price) {
+    }else if(desLength>50){
+      errors.description = "Description Tool Long!";
+    }if (!values.price) {
       errors.price = "Enter Price!";
-    }else if(!values.price>=1000000){
+    }else if(values.price>=1000000){
       errors.price = "Price too High : Invalid Amount!"
+    }else if(!re.test(values?.price)){
+      errors.price = "Invalid Amount!"
+    }else if(values.price<0){
+      errors.price = "Invalid Amount : Price Cannot Be Negative!"
     }
     if(!values.stock){
       errors.stock="Enter the stock of Product!"
+    }else if(!re.test(values.stock)){
+      errors.stock="Invalid No Of Stock!"
+    }
+    else if(values.stock<0){
+      errors.stock="Stock No cannot be negative!"
+    }else if(values.stock.length>8){
+      errors.stock="Invalid No Of Stock: Stock Amount Too Big!"
     }
     if(!values.images?.length){
       errors.images = "Upload 4 Product Images!";

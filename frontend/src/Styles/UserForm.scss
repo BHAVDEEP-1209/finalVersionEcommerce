@@ -4,6 +4,17 @@
     padding:2% 4%;
     margin-bottom: 20px;
 
+    .header{
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+
+        .editIcon{
+            cursor: pointer;
+        }
+    }
+
     h1{
         
             font-family: 'Limelight', cursive;
@@ -67,4 +78,8 @@
             gap: 10px;
         }
     }
+}
+
+.none{
+    display: none;
 }

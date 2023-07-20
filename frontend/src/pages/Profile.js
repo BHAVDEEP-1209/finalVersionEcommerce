@@ -133,7 +133,7 @@ const Profile = () => {
               >
                 <div className="left">
                   <LocalShippingIcon />
-                  <Link to="/profile/orders">Orders</Link>
+                  <Link to="/profile/orders">My Customer Orders</Link>
                 </div>
                 <img src={upper} alt="" />
               </div>
@@ -146,7 +146,7 @@ const Profile = () => {
               >
                 <div className="left">
                   <ArchiveIcon />
-                  <Link to="/profile/history">Orders History</Link>
+                  <Link to="/profile/history">My Customers Orders History</Link>
                 </div>
                 <img src={upper} alt="" />
               </div>

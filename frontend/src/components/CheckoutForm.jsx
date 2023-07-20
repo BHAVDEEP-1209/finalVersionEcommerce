@@ -20,6 +20,7 @@ const CheckoutForm = () => {
   // validation
   const validate = (values) => {
     const errors = {};
+    let re=/^-?[0-9]+$/;
 
     if (!values.street) {
       errors.street = "Street required!";
@@ -39,6 +40,10 @@ const CheckoutForm = () => {
     }
     if (!values.pin) {
       errors.pin = "Enter Pin-Code!";
+    }else if(values.pin<0){
+      errors.pin = "Invalid Pin-Code : Pin-Code cannot be negative!";
+    }else if(!re.test(values.pin)){
+      errors.pin = "Invalid Pin-Code!";
     }else if(values.pin.length!=6){
         errors.pin = "Enter 6 digit Pin-Code!";
     }
@@ -50,7 +55,7 @@ const CheckoutForm = () => {
         setFormvalues((prev)=>{
             return {
                 ...prev,
-                [name] : value
+                [name] : value.trim()
             }
         })
     }

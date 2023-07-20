@@ -54,14 +54,14 @@ const Register = () => {
       setFormValues((prev) => {
         return {
           ...prev,
-          email: value.slice(0, 10),
+          email: value.slice(0, 10).trim(),
         };
       });
     } else {
       setFormValues((prev) => {
         return {
           ...prev,
-          [name]: value,
+          [name]: value.trim(),
         };
       });
     }

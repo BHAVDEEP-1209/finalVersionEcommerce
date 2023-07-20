@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Modal } from 'antd';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { Select, Space } from 'antd';
-import { deleteCartItem, updateOrderStatus } from '../utils/utils';
+import { deleteCartItem, reduceProductOrder, updateOrderStatus } from '../utils/utils';
 import { Button, notification } from 'antd';
 import { useSelector } from 'react-redux';
 import Loader from "../components/Loader"
@@ -25,6 +25,9 @@ const OrderItem = (props) => {
   const location = useLocation().pathname;
   const currDate = new Date().getDate();
   const orderDate = new Date(time).getDate();
+  const orderPrice = product?.price * props.state?.quantity;
+
+  const discountPrice = props?.state?.discount;
 
   const [loading,setLoading] = useState(false);
 
@@ -97,11 +100,13 @@ const OrderItem = (props) => {
     setLoading(true);
 
     try {
+      
       const del = await deleteCartItem(props.state.id);
 
       props?.st.setClick(prev=>{
         return !prev;
       })
+      const result2 = await reduceProductOrder({id : product._id});
 
       msg = "Order Cancelled!"
       openNotificationWithIcon('success')
@@ -130,7 +135,8 @@ const OrderItem = (props) => {
           <div className="header">
             <div className="leftInfo">
               <h1>{product?.name}</h1>
-              <span>Price:{product?.price}</span>
+              <span>Quanitity: {props?.state?.quantity}</span>
+              <span>Order Price: { discountPrice!=0 ? discountPrice : orderPrice }</span>
             </div>
             <span>ID <span className='orderId'>#{props.state._id}</span></span>
           </div>

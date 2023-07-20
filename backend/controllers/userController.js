@@ -30,8 +30,10 @@ exports.getVendorsList = async(req,res)=>{
 // update User
 exports.update = async(req,res)=>{
     try {
+
         const id = req.params.id;
         const newUser = await User.findByIdAndUpdate(id , {...req.body});
+
         const user = await User.findById(id);
 
         res.status(201).json(user);

@@ -37,7 +37,11 @@ const OrderHistory = () => {
                 let t = 0;
                 {
                     res.data?.map((ele) => {
-                        t = t + (Number(ele.product.price) * Number(ele.quantity));
+                        if(ele.discount==0){
+                            t = t + (Number(ele.product.price) * Number(ele.quantity));
+                        }else{
+                            t = t + ele.discount;
+                        }
                     })
                 }
                 setTotal(t);

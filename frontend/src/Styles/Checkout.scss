@@ -153,6 +153,30 @@
             align-items: center;
             padding: 12px 10px;
 
+            .leftInfo{
+                display: flex;
+                flex-direction: column;
+                gap: 1px;
+                margin-bottom: 5px;
+
+                .priceInfo{
+                    display: flex;
+                    gap: 20px;
+
+                    .old{
+                        text-decoration: line-through;
+                        color: rgb(237, 93, 93);
+                    }
+                }
+
+                span{
+                    color: rgb(76, 70, 70);
+                    font-family: 'Poppins', sans-serif;
+                    font-size: 16px;
+                    letter-spacing: 1px;
+                }
+            }
+
 
 
             h1 {

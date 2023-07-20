@@ -1,4 +1,4 @@
-import {Routes , Route} from "react-router-dom";
+import {Routes , Route, Navigate } from "react-router-dom";
 import Register from "./pages/Register"
 import Login from "./pages/Login"
 import Homepage from "./pages/Homepage"
@@ -29,6 +29,16 @@ import ChatPage from "./pages/ChatPage";
 function App() {
   const isLoggedIn = useSelector(state=>state.isLoggedIn);
 
+  const PrivateRoute1 = ({ children }) => {
+    const user = useSelector((state) => state.isLoggedIn);
+    return !user ? <Navigate to="/" /> : <>{children}</>;
+  };
+
+  const PrivateRoute2 = ({ children }) => {
+    const user = useSelector((state) => state.isLoggedIn);
+    return user ? <Navigate to="/homepage" /> : <>{children}</>;
+  };
+
   const private1 = [
     {
       path : "/register",
@@ -38,10 +48,10 @@ function App() {
       path : "/",
       element : <Login />
     },
-    {
-      path : "*",
-      element : <Login />
-    },
+    // {
+    //   path : "*",
+    //   element : <Login />
+    // },
   ]
 
 
@@ -98,23 +108,15 @@ function App() {
       path : "/makeup",
       element : <MakeUp />
     },
-    {
-      path : "*",
-      element : <Homepage />
-    },
+    // {
+    //   path : "*",
+    //   element : <Homepage />
+    // },
   ]
   return (
     <div className="App">
       <Routes>
-        {/* <Route path="/" element={<Register />}/>
-        <Route path="/login" element={<Login />}/>
-
-        <Route path="/homepage" element={<Homepage />}/>
-        <Route path="/addProduct" element={<AddProduct />}/>
-        <Route path="/cart" element={<Cart />}/>
-        <Route path="/productDetail/:id" element={<ProductDetail />}/>
-        <Route path="/addProduct/:id" element={<AddProduct />}/> */}
-
+        <Route path="/homepage" element={<Homepage />} />
         {
           isLoggedIn ? <>
           {
@@ -122,12 +124,17 @@ function App() {
               return <Route path={ele.path} element={ele.element} />
             })
           }
+          <Route path="*" element={<PrivateRoute2>
+            <Homepage />
+            </PrivateRoute2>} />
           </> : <>
-          {
-            private1.map((ele)=>{
-              return <Route path={ele.path} element={ele.element} />
-            })
-          }
+          <Route path="/" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="*" element={
+            <PrivateRoute1>
+              <Login />
+            </PrivateRoute1>
+          } />
           </>
         }
         {
@@ -140,7 +147,10 @@ function App() {
           <Route path="history" element={<OrderHistory />} />
           <Route path="vendors" element={<VendorList />} />
           <Route path="allOrders" element={<AllOrders />} />
-          <Route path="*" element={<Login />} />
+          <Route path="*" element={
+          <PrivateRoute2>
+            <Homepage />
+          </PrivateRoute2>} />
 
           <Route path="allOrdersHistory" element={<AllOrdersHistory />} />
         </Route>

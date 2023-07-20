@@ -17,8 +17,9 @@ const CartItem = (props) => {
   const [quan, setQuan] = useState(props.state.quantity);
   const [onLoad, setLoad] = useState(false);
   const location = useLocation().pathname;
-
   const [loading, setLoading] = useState(false);
+  const [calculatedPrice, setCalculatedPrice] = useState(props.state?.quantity * product?.price);
+  const newPrice = calculatedPrice - (calculatedPrice * 0.20);
 
   let nq = quan;
   ////////////////////notification
@@ -35,7 +36,7 @@ const CartItem = (props) => {
     if (quan < product?.stock) {
       nq = quan + 1;
       setQuan(nq);
-    }else{
+    } else {
       msg = "Cannot Exceed Stock Quantity!";
       openNotificationWithIcon("warning");
     }
@@ -86,7 +87,7 @@ const CartItem = (props) => {
     setLoad(true);
   }, [quan]);
 
-  console.log("stock",product.stock);
+  console.log("stock", product.stock);
 
   return (
     <>
@@ -99,7 +100,15 @@ const CartItem = (props) => {
           <div className="header">
             <div className="leftInfo">
               <h1>{product?.name}</h1>
-              <span>Price:{product?.price}</span>
+              <span>Quanitity:{props.state?.quantity}</span>
+              <div className="priceInfo">
+                <span>Item-Price:{product?.price}</span>
+                <span className={props.st.dis && "old"}>Order Price: {props.state?.quantity * product?.price}</span>
+                {
+                  props.st.dis == true && <span>New Price:{Math.round(newPrice)}!</span>
+                }
+              </div>
+
             </div>
             {location == "/cart" && (
               <>
@@ -125,21 +134,21 @@ const CartItem = (props) => {
             <span>Description: {product?.description}</span>
 
             {/* testing  */}
-            <span>Quanitity:{props.state?.quantity}</span>
-            <span>Calculated Price: {props.state?.quantity * product?.price}</span>
-            <span>New Price:</span>
+
+            {/* <span>Calculated Price: {props.state?.quantity * product?.price}</span> */}
+
 
             {location == "/orders" && <span>{props.state.orderStatus}</span>}
           </div>
 
           {location == "/cart" && (
             <div className="footer">
-              <div className="add" style={{cursor: "pointer"}}>
+              <div className="add" style={{ cursor: "pointer" }}>
                 <RemoveIcon onClick={handleSub} className="icon" />
               </div>
               <h1>{quan}</h1>
-              <div className="add" style={{cursor: "pointer"}}>
-                <AddIcon onClick={handleAdd} className="icon"/>
+              <div className="add" style={{ cursor: "pointer" }}>
+                <AddIcon onClick={handleAdd} className="icon" />
               </div>
             </div>
           )}

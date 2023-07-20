@@ -22,6 +22,10 @@ const cartSchema = new mongoose.Schema({
         type: String,
         default : "stock"
     },
+    discount:{
+        type: Number,
+        default : 0
+    },
     createdAt: {
         type: Date,
         default : Date.now

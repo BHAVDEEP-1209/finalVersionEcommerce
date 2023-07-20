@@ -16,8 +16,8 @@ const Cart = () => {
   const [newQuan, setNewQuan] = useState(0);
   const [onLoad, setOnLoad] = useState(true);
   const [click, setClick] = useState(false);
-  const [id,setId] = useState("");
-  
+  const [id, setId] = useState("");
+
 
   ////////////////////notification
   const [api, contextHolder] = notification.useNotification();
@@ -38,45 +38,45 @@ const Cart = () => {
         navigate(`/profile/account`)
       }, 800)
 
-    }else if(!cartItems.length){
+    } else if (!cartItems.length) {
       msg = "Add Items To Cart To Proceed!"
       openNotificationWithIcon('warning');
-    }else {
+    } else {
       const address = user?.address
-      if(!address.street || !address.city || !address.state || !address.pin){
+      if (!address.street || !address.city || !address.state || !address.pin) {
         msg = "Add Address!"
         openNotificationWithIcon('warning');
 
         setTimeout(() => {
           navigate(`/profile/account`)
         }, 800)
-  
-      }else{
+
+      } else {
         navigate(`/checkout`)
       }
-      
+
     }
   }
 
   useEffect(() => {
-   
+
     const get2 = async () => {
-        try {
-          const items = await getCartItems(user.id);
-          setCartItems(items.data);
-          let t = 0;
-          {
-            items.data?.map((ele) => {
-              t = t + (Number(ele.product.price) * Number(ele.quantity));
-            })
-          }
-          if (t > 0) {
-            setTotal(t);
-          }
-        } catch (error) {
-          console.log(error);
+      try {
+        const items = await getCartItems(user.id);
+        setCartItems(items.data);
+        let t = 0;
+        {
+          items.data?.map((ele) => {
+            t = t + (Number(ele.product.price) * Number(ele.quantity));
+          })
         }
-      
+        if (t > 0) {
+          setTotal(t);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
     }
     get2();
   }, [click]);
@@ -93,7 +93,7 @@ const Cart = () => {
           <div className="cartItems">
             {
               cartItems?.map((ele, ind) => {
-                return <CartItem state={ele} key={ind} st={{ newQuan, setNewQuan, click, setClick, setId , setTotal , total}} />
+                return <CartItem state={ele} key={ind} st={{ newQuan, setNewQuan, click, setClick, setId, setTotal, total }} />
               })
             }
 
@@ -101,13 +101,15 @@ const Cart = () => {
               !cartItems.length && <Empty />
             }
           </div>
-          <div className="cartTotal">
-            
-               <button onClick={handleProceedToBuy}>
-              Proceed to Buy
-            </button>
-            
-          </div>
+          {
+            cartItems.length && <div className="cartTotal">
+
+              <button onClick={handleProceedToBuy}>
+                Proceed to Buy
+              </button>
+
+            </div>
+          }
         </div>
       </div>
 

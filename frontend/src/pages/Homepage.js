@@ -10,6 +10,7 @@ import { Empty, notification, Radio } from "antd";
 import { setValue } from "../slices/userSlice";
 import vendor from "../assets/vendor.png"
 import customer from "../assets/customer.png"
+import Loader from "../components/Loader"
 
 const Homepage = () => { 
   const user = useSelector(state=>state.currentUser);
@@ -17,6 +18,7 @@ const Homepage = () => {
   const [products,setProducts] = useState([]);
   const dispatch = useDispatch();
   const location = useLocation().pathname;
+  const [loading,setLoading] = useState(false);
 
   const ref = useRef(null);
 
@@ -26,20 +28,24 @@ const Homepage = () => {
 
   useEffect(()=>{
     const getVendor=async()=>{
+      setLoading(true);
       try {
         const result = (await getAllProducts()).data.products;
         if(user.role=="vendor"){
           const temp2  = result.filter((ele)=>{
             return (ele?.uploadedBy!= user?.email && ele?.savedAs == "product")
           })
+          setLoading(false);
           setProducts(temp2);
         }else{
           const temp2  = result.filter((ele)=>{
             return (ele?.savedAs == "product")
           })
+          // setLoading(false);
           setProducts(temp2);
         }
       } catch (error) {
+        // setLoading(false);
         console.log(error);
       }
     } 
@@ -91,17 +97,23 @@ const Homepage = () => {
         <h1 className='heading'>TRENDING</h1>
         <h5 className='desc'>HOTTEST ITEMS</h5>
 
+       {
+        loading ? 
+        <div className="loaderDiv">
+          <Loader />
+        </div> : 
         <div className="items">
-          {
-            products?.map((ele,ind)=>{
-              return <Item state={ele} key={ind}/>
-            })
-          }
-          {
-            !products.length && <Empty />
-          }
-          
-        </div>
+        {
+          products?.map((ele,ind)=>{
+            return <Item state={ele} key={ind}/>
+          })
+        }
+        {
+          !products.length && <Empty />
+        }
+        
+      </div>
+       }
       
       {/* {
         user?.role != "customer" && <img src={plus} alt="" className='plusIcon' onClick={()=>navigate("/addProduct")}/>

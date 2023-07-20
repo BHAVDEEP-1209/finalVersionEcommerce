@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import "../Styles/ProductDetail.scss";
 import { useNavigate, useParams } from "react-router-dom";
-import { addToCart, getProduct } from "../utils/utils";
+import { addToCart, getProduct, getProductTotalSales } from "../utils/utils";
 import down from "../assets/arrow.svg";
 import up from "../assets/up-arrow.svg";
 import fullStar from "../assets/fullStar.png";
@@ -31,6 +31,7 @@ const ProductDetail = () => {
   const user = useSelector((state) => state.currentUser);
   const navigate = useNavigate();
   const address = user?.address;
+  const [total,setTotal] = useState(0);
 
   const [loading, setLoading] = useState(false);
 
@@ -47,8 +48,21 @@ const ProductDetail = () => {
   useEffect(() => {
     const get = async () => {
       try {
+        
         const result = await getProduct(id);
         setProduct(result.data);
+        const totalSales = await getProductTotalSales({uploadedBy : result.data?.uploadedBy , id : result.data?._id});
+        let t = 0;
+        totalSales.data?.map((ele)=>{
+          if(ele.discount==0){
+            t = t +ele?.product?.price * ele?.quantity;
+          }else{
+            t = t+ele?.discount;
+          }
+        })
+
+        setTotal(t);
+
       } catch (error) {
         console.log(error);
       }
@@ -144,7 +158,6 @@ const ProductDetail = () => {
     }
   };
 
-  console.log(product);
 
   const outOfStock=()=>{
 
@@ -284,7 +297,7 @@ const ProductDetail = () => {
 
               <div className="ordersInfo">
                 <img src={money} alt="" />
-                <h1>Total Profit:</h1>
+                <h1>Total Profit:{total}</h1>
                 {/* <span>{product?.Orders * product?.price * }</span> */}
               </div>
             </div>

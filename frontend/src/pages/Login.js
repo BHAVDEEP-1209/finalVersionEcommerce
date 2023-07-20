@@ -55,7 +55,7 @@ const Login = () => {
       setFormValues(prev=>{
         return {
           ...prev,
-          "email" : value.slice(0, 10)
+          "email" : value.slice(0, 10).trim()
         }
       })
     }else{
@@ -63,7 +63,7 @@ const Login = () => {
 
         return {
           ...prev,
-          [name]: value
+          [name]: value.trim()
         }
       })
     }

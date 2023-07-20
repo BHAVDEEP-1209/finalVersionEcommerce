@@ -50,7 +50,7 @@ export const userSlice = createSlice({
     },
     setAdminId : (state,action)=>{
       state.adminId = action.payload;
-    }
+    },
   },
 })
 

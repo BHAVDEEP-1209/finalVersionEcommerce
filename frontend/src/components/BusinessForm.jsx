@@ -50,14 +50,14 @@ const BusinessForm = (props) => {
   const validate = (values) => {
     const errors = {};
 
-    if (!values.brandName) {
+    if (!values.brandName.trim()) {
       errors.brandName = "Brand Name required!";
-    }else if(values.brandName.length>30){
+    }else if(values.brandName.trim().length>30){
       errors.brandName = "Invalid Brand Name : Too Long!";
     }
-    if (!values.brandDescription) {
+    if (!values.brandDescription.trim()) {
       errors.brandDescription = "Brand Description required!";
-    }else if(values.brandDescription.length>50){
+    }else if(values.brandDescription.trim().length>50){
       errors.brandDescription = "Invalid Brand Description : Too Long!";
     }
 
