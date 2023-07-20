@@ -9,12 +9,14 @@ import { getAllProducts, updateUser } from '../utils/utils'
 import { notification, Radio } from "antd";
 import { setValue } from "../slices/userSlice";
 import { Empty } from 'antd';
+import Loader from "../components/Loader"
 
 const Homepage = () => {
     const user = useSelector(state => state.currentUser);
     const navigate = useNavigate();
     const [products, setProducts] = useState([]);
     const dispatch = useDispatch();
+    const [loading,setLoading] = useState(false);
 
     const ref = useRef(null);
 
@@ -24,55 +26,32 @@ const Homepage = () => {
 
     useEffect(() => {
         const getVendor = async () => {
+            setLoading(true);
             try {
                 const result = (await getAllProducts()).data.products;
                 if(user?.role=="vendor"){
                     const temp2  = result.filter((ele)=>{
                       return (ele?.uploadedBy!= user?.email && ele?.category=="makeUp" && ele?.savedAs == "product")
                     })
+                    setLoading(false);
                     setProducts(temp2);
                   }else{
                     const temp2  = result.filter((ele)=>{
                       return (ele?.category=="makeUp" && ele?.savedAs == "product")
                     })
+                    setLoading(false);
                     setProducts(temp2);
                   }
             } catch (error) {
+                setLoading(false);
                 console.log(error);
             }
         }
         getVendor();
     }, [])
 
-    const onRoleChange = async (e) => {
-        try {
-            const data = {
-                email: user?.email,
-                role: e.target.value
-            }
-            const updatedUser = await updateUser(user.id, data);
-            dispatch(setValue(updatedUser.data));
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-
     return (
         <>
-            {user?.role === "role" ? <div className="roleSelector">
-                Select role to proceed further
-                <Radio.Group
-                    className="radio"
-                    name="role"
-                    onChange={onRoleChange}
-                >
-                    <Radio value={"customer"}>Customer</Radio>
-                    <Radio value={"vendor"}>Vendor</Radio>
-                </Radio.Group>
-            </div>
-                :
-                /// homepage
                 <div className='homepage'>
                     <Navbar />
                     <div className="videoDiv">
@@ -85,7 +64,13 @@ const Homepage = () => {
                         <h1 className='heading'>MAKEUP</h1>
                         <h5 className='desc'>HOTTEST ITEMS</h5>
 
-                        <div className="items">
+                        {
+                            loading ? 
+                            <div className="loaderDiv">
+                                <Loader />
+                            </div>
+                            :
+                            <div className="items">
                             {
                                 products?.map((ele, ind) => {
                                     return <Item state={ele} key={ind} />
@@ -97,15 +82,13 @@ const Homepage = () => {
                             }
 
                         </div>
+                        }
 
                         {
                             user?.role != "customer" && <img src={plus} alt="" className='plusIcon' onClick={() => navigate("/addProduct")} />
                         }
                     </div>
                 </div>
-
-            }
-
         </>
 
     )

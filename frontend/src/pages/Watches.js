@@ -64,7 +64,8 @@ const Homepage = () => {
         <h5 className='desc'>HOTTEST ITEMS</h5>
 
         {
-          loading ? <div className="loaderDiv">
+          loading ? 
+          <div className="loaderDiv">
             <Loader />
           </div>
           :

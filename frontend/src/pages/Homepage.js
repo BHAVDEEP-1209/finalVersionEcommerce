@@ -115,9 +115,9 @@ const Homepage = () => {
       </div>
        }
       
-      {/* {
+      {
         user?.role != "customer" && <img src={plus} alt="" className='plusIcon' onClick={()=>navigate("/addProduct")}/>
-      } */}
+      }
       </div>
     </div> 
     
