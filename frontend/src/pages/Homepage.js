@@ -41,11 +41,11 @@ const Homepage = () => {
           const temp2  = result.filter((ele)=>{
             return (ele?.savedAs == "product")
           })
-          // setLoading(false);
+          setLoading(false);
           setProducts(temp2);
         }
       } catch (error) {
-        // setLoading(false);
+        setLoading(false);
         console.log(error);
       }
     } 

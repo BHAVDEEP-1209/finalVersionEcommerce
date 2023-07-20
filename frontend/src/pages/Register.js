@@ -177,9 +177,6 @@ const Register = () => {
       {contextHolder}
       <Navbar />
       <Space>
-        {/* <Button onClick={() => openNotificationWithIcon("success")}>
-          Success
-        </Button> */}
       </Space>
       <div className="imgContainer">
         <img
